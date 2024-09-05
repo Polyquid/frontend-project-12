@@ -1,18 +1,14 @@
 import {
   createBrowserRouter,
 } from 'react-router-dom';
-import Header from '../components/Header.jsx';
 import ErrorPage from '../pages/ErrorPage.jsx';
 import LoginPage from '../pages/LoginPage.jsx';
+import App from '../components/App.jsx';
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: (
-      <div>
-        <Header />
-      </div>
-    ),
+    element: <App />,
     errorElement: <ErrorPage />,
   },
   {

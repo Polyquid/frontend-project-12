@@ -5,24 +5,25 @@ import {
   Field,
   ErrorMessage,
 } from 'formik';
-import * as Yup from 'yup';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import getSignUpSchema from '../utils/getSignUpSchema';
+import setAuthDataInLocalStorage from '../utils/setAuthDataInLocalStorage';
+import { setAuthToken, setUserName } from '../services/authSlice';
 
 const SignUpForm = () => {
   const [isInvalidResponse, setIsInvalidResponse] = useState(false);
   const navigate = useNavigate();
-  const signUpSchema = Yup.object({
-    username: Yup.string()
-      .required('Обязательно для заполнения'),
-    password: Yup.string()
-      .required('Обязательно для заполнения'),
-  });
+  const dispatch = useDispatch();
+  const signUpSchema = getSignUpSchema();
   const handleSubmit = async (values) => {
     try {
-      const { data: { token } } = await axios.post('/api/v1/login', values);
-      localStorage.setItem('token', token);
+      const { data: { token, username } } = await axios.post('/api/v1/login', values);
+      setAuthDataInLocalStorage(token, username);
+      dispatch(setAuthToken({ token }));
+      dispatch(setUserName({ username }));
       setIsInvalidResponse(false);
       navigate('/', { replace: false });
     } catch (e) {
@@ -30,6 +31,7 @@ const SignUpForm = () => {
       console.log(e);
     }
   };
+
   return (
     <Formik
       initialValues={{
