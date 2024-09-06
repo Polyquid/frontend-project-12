@@ -27,29 +27,28 @@ export const messagesApi = createApi({
   endpoints: (builder) => ({
     getMessages: builder.query({
       query: () => '',
+      async onCacheEntryAdded(
+        arg,
+        { updateCachedData, cacheDataLoaded, cacheEntryRemoved },
+      ) {
+        socket.connect();
+        try {
+          await cacheDataLoaded;
+          const listener = (data) => {
+            if (!isMessage(data)) return;
+            updateCachedData((draft) => {
+              draft.push(data);
+            });
+          };
+          socket.on('newMessage', listener);
+        } catch {
+          // no-op in case `cacheEntryRemoved` resolves before `cacheDataLoaded`,
+          // in which case `cacheDataLoaded` will throw
+        }
+        await cacheEntryRemoved;
+        socket.disconnect();
+      },
     }),
-    async onCacheEntryAdded(
-      arg,
-      { updateCachedData, cacheDataLoaded, cacheEntryRemoved },
-    ) {
-      socket.connect();
-      try {
-        await cacheDataLoaded;
-        const listener = (rawData) => {
-          const data = JSON.parse(rawData);
-          if (!isMessage(data)) return;
-          updateCachedData((draft) => {
-            draft.push(data);
-          });
-        };
-        socket.on('newMessage', listener);
-      } catch {
-        // no-op in case `cacheEntryRemoved` resolves before `cacheDataLoaded`,
-        // in which case `cacheDataLoaded` will throw
-      }
-      await cacheEntryRemoved;
-      socket.disconnect();
-    },
     addMessage: builder.mutation({
       query: (message) => ({
         method: 'POST',

@@ -16,7 +16,6 @@ const LoginPage = () => {
   };
   const localStorageToken = localStorage.getItem('token');
   useEffect(() => {
-    console.log(localStorageToken);
     if (localStorageToken) {
       dispatch(setAuthToken({ token: localStorageToken }));
       navigate('/', { replace: false });
