@@ -1,15 +1,27 @@
-// import { useState } from 'react';
+import { useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import Button from 'react-bootstrap/Button';
+import { useAddMessageMutation } from '../../services/messagesApi';
 
-const MessagesForm = ({ currentChannelId }) => {
-  console.log(currentChannelId);
-  // const [body, setBody] = useState('');
+const MessagesForm = ({ currentChannelId, username }) => {
+  const [body, setBody] = useState('');
+  const [addMessage] = useAddMessageMutation();
+  const handleSubmit = (channelId) => (e) => {
+    e.preventDefault();
+    const newMessage = {
+      body,
+      channelId,
+      username,
+    };
+    addMessage(newMessage);
+    setBody('');
+  };
   return (
     <div className="mt-auto px-5 py-3">
       <Form
         className="py-1 border rounded-2"
+        onSubmit={handleSubmit(currentChannelId)}
       >
         <InputGroup>
           <Form.Control
@@ -19,8 +31,17 @@ const MessagesForm = ({ currentChannelId }) => {
             placeholder="Введите сообщение..."
             id="body"
             className="form-control"
+            value={body}
+            onChange={(e) => {
+              setBody(e.target.value);
+            }}
           />
-          <Button className="btn btn-group-vertical" variant="outline-primary">
+          <Button
+            type="submit"
+            className="btn btn-group-vertical"
+            variant="outline-primary"
+            disabled={body ? '' : 'on'}
+          >
             →
             <span className="visually-hidden">Отправить</span>
           </Button>

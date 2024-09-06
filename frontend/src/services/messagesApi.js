@@ -1,4 +1,8 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import isMessage from '../utils/isMessage';
+import getSocket from '../utils/getSocket';
+
+const socket = getSocket();
 
 const baseQuery = fetchBaseQuery({
   baseUrl: '/api/v1/messages',
@@ -24,6 +28,28 @@ export const messagesApi = createApi({
     getMessages: builder.query({
       query: () => '',
     }),
+    async onCacheEntryAdded(
+      arg,
+      { updateCachedData, cacheDataLoaded, cacheEntryRemoved },
+    ) {
+      socket.connect();
+      try {
+        await cacheDataLoaded;
+        const listener = (rawData) => {
+          const data = JSON.parse(rawData);
+          if (!isMessage(data)) return;
+          updateCachedData((draft) => {
+            draft.push(data);
+          });
+        };
+        socket.on('newMessage', listener);
+      } catch {
+        // no-op in case `cacheEntryRemoved` resolves before `cacheDataLoaded`,
+        // in which case `cacheDataLoaded` will throw
+      }
+      await cacheEntryRemoved;
+      socket.disconnect();
+    },
     addMessage: builder.mutation({
       query: (message) => ({
         method: 'POST',

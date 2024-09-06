@@ -3,7 +3,7 @@ import MessagesBody from './MessagesBody';
 import MessagesForm from './MessagesForm';
 import MessagesHeader from './MessagesHeader';
 
-const Messages = ({ data }) => {
+const Messages = ({ data, username }) => {
   const { name, id } = useSelector((state) => state.ui.currentChannel);
   const currentMessages = data?.filter(({ channelId }) => channelId === id);
   return (
@@ -14,7 +14,7 @@ const Messages = ({ data }) => {
           currentChannelName={name}
         />
         <MessagesBody currentMessages={currentMessages} />
-        <MessagesForm currentChannelId={id} />
+        <MessagesForm currentChannelId={id} username={username} />
       </div>
     </div>
   );
