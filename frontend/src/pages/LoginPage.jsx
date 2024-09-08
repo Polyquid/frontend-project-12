@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import SignUpForm from '../components/SignUpForm.jsx';
+import LoginForm from '../components/LoginForm.jsx';
 import Header from '../components/Header.jsx';
 import { setAuthToken } from '../services/authSlice.js';
 
@@ -29,7 +29,8 @@ const LoginPage = () => {
           <div className="col-12 col-md-8 col-xxl-6">
             <div className="card shadow-sm">
               <div className="card-body row p-5">
-                <SignUpForm />
+                <h1 className="text-center mb-4">Войти</h1>
+                <LoginForm />
               </div>
               <div className="card-footer p-4">
                 <div className="d-flex flex-column align-items-center">

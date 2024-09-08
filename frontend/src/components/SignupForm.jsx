@@ -9,28 +9,28 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import getSignUpSchema from '../utils/validation/getSignUpSchema';
+import getSignupSchema from '../utils/validation/getSignupSchema';
 import setAuthDataInLocalStorage from '../utils/setAuthDataInLocalStorage';
 import { setAuthToken, setUserName } from '../services/authSlice';
 
-const SignUpForm = () => {
+const SignupForm = () => {
   const [isInvalidResponse, setIsInvalidResponse] = useState(false);
   const [disabled, setDisabled] = useState(null);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const signUpSchema = getSignUpSchema();
-  const handleSubmit = async (values) => {
+  const signUpSchema = getSignupSchema();
+  const handleSubmit = async ({ confirmPassword, ...values }) => {
     try {
       setDisabled('true');
-      const { data: { token, username } } = await axios.post('/api/v1/login', values);
+      const { data: { token, username } } = await axios.post('/api/v1/signup', values);
       setAuthDataInLocalStorage(token, username);
       dispatch(setAuthToken({ token }));
       dispatch(setUserName({ username }));
       setIsInvalidResponse(false);
       navigate('/', { replace: false });
     } catch (e) {
-      if (e.status === 401) {
+      if (e.status === 409) {
         setIsInvalidResponse(true);
       }
     } finally {
@@ -43,36 +43,37 @@ const SignUpForm = () => {
       initialValues={{
         username: '',
         password: '',
+        confirmPassword: '',
       }}
       validationSchema={signUpSchema}
       onSubmit={handleSubmit}
     >
       {({ errors, touched }) => (
         <Form>
-          <h1 className="text-center mb-4">Войти</h1>
           <div className="form-floating mb-3">
             <Field
               type="text"
               name="username"
               autoComplete="username"
               required=""
-              placeholder="Ваш ник"
+              placeholder="Имя пользователя"
               id="username"
               className={`form-control ${
                 (touched.username && errors.username) || isInvalidResponse ? 'is-invalid' : ''
               }`}
             />
-            <label htmlFor="username">Ваш ник</label>
+            <label htmlFor="username">Имя пользователя</label>
             <ErrorMessage
               component="div"
               name="username"
               className="invalid-feedback"
             />
           </div>
-          <div className="form-floating mb-4">
+
+          <div className="form-floating mb-3">
             <Field
               name="password"
-              autoComplete="current-password"
+              autoComplete="password"
               required=""
               placeholder="Пароль"
               type="password"
@@ -87,7 +88,27 @@ const SignUpForm = () => {
               name="password"
               className="invalid-feedback"
             />
-            {isInvalidResponse ? <div className="invalid-tooltip" style={{ display: 'block' }}>Неверные имя пользователя или пароль</div> : null}
+          </div>
+
+          <div className="form-floating mb-4">
+            <Field
+              name="confirmPassword"
+              autoComplete="confirmPassword"
+              required=""
+              placeholder="Подтвердите пароль"
+              type="password"
+              id="confirmPassword"
+              className={`form-control ${
+                (touched.confirmPassword && errors.confirmPassword) || isInvalidResponse ? 'is-invalid' : ''
+              }`}
+            />
+            <label htmlFor="confirmPassword">Подтвердите пароль</label>
+            <ErrorMessage
+              component="div"
+              name="confirmPassword"
+              className="invalid-feedback"
+            />
+            {isInvalidResponse ? <div className="invalid-tooltip" style={{ display: 'block' }}>Такой пользователь уже существует</div> : null}
           </div>
           <button type="submit" className="w-100 mb-3 btn btn-outline-primary" disabled={disabled}>
             Войти
@@ -98,4 +119,4 @@ const SignUpForm = () => {
   );
 };
 
-export default SignUpForm;
+export default SignupForm;
