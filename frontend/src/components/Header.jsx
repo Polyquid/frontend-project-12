@@ -9,6 +9,7 @@ import resetAuthDataInLocalStorage from '../utils/resetAuthDataInLocalStorage';
 const Header = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
   const currentUserName = localStorage.getItem('username');
   const renderUserName = () => {
     if (currentUserName) {
@@ -35,10 +36,11 @@ const Header = () => {
     }
     return null;
   };
+
   return (
     <Navbar className="shadow-sm navbar bg-white">
       <Container>
-        <Navbar.Brand href="#home">Slack chat</Navbar.Brand>
+        <Navbar.Brand href="#home">Hexlet Chat</Navbar.Brand>
         <Navbar.Collapse className="justify-content-end">
           {renderUserName()}
           {renderExitButton()}

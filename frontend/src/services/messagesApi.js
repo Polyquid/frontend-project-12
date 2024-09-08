@@ -1,5 +1,4 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import isMessage from '../utils/isMessage';
 import getSocket from '../utils/getSocket';
 
 const socket = getSocket();
@@ -35,7 +34,7 @@ export const messagesApi = createApi({
         try {
           await cacheDataLoaded;
           const listener = (data) => {
-            if (!isMessage(data)) return;
+            console.log(data);
             updateCachedData((draft) => {
               draft.push(data);
             });

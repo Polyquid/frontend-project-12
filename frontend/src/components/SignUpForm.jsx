@@ -9,17 +9,20 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import getSignUpSchema from '../utils/getSignUpSchema';
+import getSignUpSchema from '../utils/validation/getSignUpSchema';
 import setAuthDataInLocalStorage from '../utils/setAuthDataInLocalStorage';
 import { setAuthToken, setUserName } from '../services/authSlice';
 
 const SignUpForm = () => {
   const [isInvalidResponse, setIsInvalidResponse] = useState(false);
+  const [disabled, setDisabled] = useState(null);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
   const signUpSchema = getSignUpSchema();
   const handleSubmit = async (values) => {
     try {
+      setDisabled('true');
       const { data: { token, username } } = await axios.post('/api/v1/login', values);
       setAuthDataInLocalStorage(token, username);
       dispatch(setAuthToken({ token }));
@@ -27,8 +30,11 @@ const SignUpForm = () => {
       setIsInvalidResponse(false);
       navigate('/', { replace: false });
     } catch (e) {
-      setIsInvalidResponse(true);
-      console.log(e);
+      if (e.status === 401) {
+        setIsInvalidResponse(true);
+      }
+    } finally {
+      setDisabled(null);
     }
   };
 
@@ -83,7 +89,7 @@ const SignUpForm = () => {
             />
             {isInvalidResponse ? <div className="invalid-tooltip" style={{ display: 'block' }}>Неверные имя пользователя или пароль</div> : null}
           </div>
-          <button type="submit" className="w-100 mb-3 btn btn-outline-primary">
+          <button type="submit" className="w-100 mb-3 btn btn-outline-primary" disabled={disabled}>
             Войти
           </button>
         </Form>

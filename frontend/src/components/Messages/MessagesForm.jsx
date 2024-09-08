@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import Button from 'react-bootstrap/Button';
@@ -6,7 +6,9 @@ import { useAddMessageMutation } from '../../services/messagesApi';
 
 const MessagesForm = ({ currentChannelId, username }) => {
   const [body, setBody] = useState('');
+  const innerRef = useRef();
   const [addMessage] = useAddMessageMutation();
+
   const handleSubmit = (channelId) => (e) => {
     e.preventDefault();
     const newMessage = {
@@ -17,6 +19,9 @@ const MessagesForm = ({ currentChannelId, username }) => {
     addMessage(newMessage);
     setBody('');
   };
+
+  useEffect(() => innerRef.current && innerRef.current.focus());
+
   return (
     <div className="mt-auto px-5 py-3">
       <Form
@@ -25,6 +30,7 @@ const MessagesForm = ({ currentChannelId, username }) => {
       >
         <InputGroup>
           <Form.Control
+            ref={innerRef}
             type="text"
             name="body"
             required=""

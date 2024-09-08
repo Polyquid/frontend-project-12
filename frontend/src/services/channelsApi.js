@@ -1,4 +1,8 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import getSocket from '../utils/getSocket';
+import { setCurrentChannel } from './uiSlice';
+
+const socket = getSocket();
 
 const baseQuery = fetchBaseQuery({
   baseUrl: '/api/v1/channels',
@@ -23,6 +27,50 @@ export const channelsApi = createApi({
   endpoints: (builder) => ({
     getChannels: builder.query({
       query: () => '',
+      async onCacheEntryAdded(
+        arg,
+        {
+          updateCachedData,
+          cacheDataLoaded,
+          cacheEntryRemoved,
+          dispatch,
+          getState,
+        },
+      ) {
+        socket.connect();
+        try {
+          await cacheDataLoaded;
+          const listenerNewChannelEvent = (data) => {
+            updateCachedData((draft) => {
+              draft.push(data);
+            });
+          };
+          const listenerRemoveChannelEvent = ({ id: removedId }) => {
+            updateCachedData((draft) => draft.filter(({ id }) => id !== removedId));
+            const { ui: { currentChannel, clickedChannel } } = getState();
+            console.log(getState());
+            if (currentChannel.id === clickedChannel.id) {
+              dispatch(setCurrentChannel({ name: 'general', id: '1' }));
+            }
+          };
+          const listenerRenameChannelEvent = (data) => {
+            updateCachedData((draft) => draft.map((channel) => {
+              if (channel.id === data.id) {
+                return data;
+              }
+              return channel;
+            }));
+          };
+          socket.on('newChannel', listenerNewChannelEvent);
+          socket.on('removeChannel', listenerRemoveChannelEvent);
+          socket.on('renameChannel', listenerRenameChannelEvent);
+        } catch {
+          // no-op in case `cacheEntryRemoved` resolves before `cacheDataLoaded`,
+          // in which case `cacheDataLoaded` will throw
+        }
+        await cacheEntryRemoved;
+        socket.disconnect();
+      },
     }),
     addChannel: builder.mutation({
       query: (channel) => ({
@@ -30,17 +78,17 @@ export const channelsApi = createApi({
         body: channel,
       }),
     }),
-    removeChannel: builder.mutation({
+    deleteChannel: builder.mutation({
       query: (id) => ({
         url: id,
         method: 'DELETE',
       }),
     }),
     editChannel: builder.mutation({
-      query: ({ id, ...body }) => ({
+      query: ({ id, name }) => ({
         url: id,
         method: 'PATCH',
-        body,
+        body: { name },
       }),
     }),
   }),
@@ -49,6 +97,6 @@ export const channelsApi = createApi({
 export const {
   useGetChannelsQuery,
   useAddChannelMutation,
-  useRemoveChannelMutation,
+  useDeleteChannelMutation,
   useEditChannelMutation,
 } = channelsApi;

@@ -5,8 +5,14 @@ const initialState = {
     name: 'general',
     id: '1',
   },
-  currentMessages: [],
-  currentModal: '',
+  currentModal: {
+    name: '',
+    show: false,
+  },
+  clickedChannel: {
+    id: null,
+    name: '',
+  },
 };
 
 const uiSlice = createSlice({
@@ -14,12 +20,22 @@ const uiSlice = createSlice({
   initialState,
   reducers: {
     setCurrentChannel: (state, { payload: currentChannel }) => ({ ...state, currentChannel }),
-    setCurrentModal: (state, { payload: { currentModal } }) => ({ ...state, currentModal }),
+    setCurrentModalName: (state, { payload: { name } }) => {
+      const newCurrentModal = { ...state.currentModal, name };
+      return { ...state, currentModal: newCurrentModal };
+    },
+    setCurrentModalShow: (state, { payload: { show } }) => {
+      const newCurrentModal = { ...state.currentModal, show };
+      return { ...state, currentModal: newCurrentModal };
+    },
+    setClickedChannel: (state, { payload: clickedChannel }) => ({ ...state, clickedChannel }),
   },
 });
 
 export const {
   setCurrentChannel,
-  setCurrentModal,
+  setCurrentModalName,
+  setCurrentModalShow,
+  setClickedChannel,
 } = uiSlice.actions;
 export default uiSlice.reducer;
