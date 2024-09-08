@@ -1,11 +1,11 @@
 import * as Yup from 'yup';
 
-const getAddChannelSchema = (channelsNames) => Yup.object({
+const getAddChannelSchema = (channelsNames, { required, length, uniq }) => Yup.object({
   name: Yup.string()
-    .required('Обязательно для заполнения')
-    .min(3, 'От 3 до 20 символов')
-    .max(20, 'От 3 до 20 символов')
-    .notOneOf(channelsNames, 'Должно быть уникальным'),
+    .required(required)
+    .min(3, length)
+    .max(20, length)
+    .notOneOf(channelsNames, uniq),
 });
 
 export default getAddChannelSchema;

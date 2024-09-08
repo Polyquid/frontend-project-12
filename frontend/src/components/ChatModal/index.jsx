@@ -1,4 +1,5 @@
 import Modal from 'react-bootstrap/Modal';
+import { useTranslation } from 'react-i18next';
 import RenameChannelModal from './RenameChannelModal';
 import DeleteChannelModal from './DeleteChannelModal';
 import AddChannelModal from './AddChannelModal';
@@ -17,9 +18,21 @@ const ChatModal = ({
   onHide,
   validationData,
 }) => {
+  const { t } = useTranslation();
+
+  const addErrorsTexts = {
+    required: t('chat.modals.add.form.errors.required'),
+    length: t('chat.modals.add.form.errors.length'),
+    uniq: t('chat.modals.add.form.errors.uniq'),
+  };
+  const renameErrorsTests = {
+    required: t('chat.modals.rename.form.errors.required'),
+    length: t('chat.modals.rename.form.errors.required'),
+    uniq: t('chat.modals.rename.form.errors.required'),
+  };
   const schemas = {
-    addChannelSchema: getAddChannelSchema(validationData ?? []),
-    renameChannelSchema: getRenameChannelSchema(validationData ?? []),
+    addChannelSchema: getAddChannelSchema(validationData ?? [], addErrorsTexts),
+    renameChannelSchema: getRenameChannelSchema(validationData ?? [], renameErrorsTests),
   };
 
   const ModalBody = mapModal[name];
@@ -28,7 +41,6 @@ const ChatModal = ({
       show={show}
       onHide={onHide}
       backdrop="static"
-      size="lg"
       aria-labelledby="contained-modal-title-vcenter"
       centered
     >

@@ -9,23 +9,34 @@ import {
 } from 'formik';
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { useTranslation } from 'react-i18next';
+import { toast } from 'react-toastify';
 import { useAddChannelMutation } from '../../services/channelsApi';
 import { setCurrentChannel } from '../../services/uiSlice';
+import getErrorTextI18n from '../../utils/getErrorTextI18n';
 
 const AddChannelModal = ({ onHide, schemas: { addChannelSchema } }) => {
   const [disabled, setDisabled] = useState(null);
   const innerRef = useRef(null);
   const dispatch = useDispatch();
   const [addChannel] = useAddChannelMutation();
+  const { t } = useTranslation();
 
   const changeToNewChannel = (channelName, id) => {
     dispatch(setCurrentChannel({ name: channelName, id }));
   };
   const handleAddSubmit = async (values) => {
     setDisabled('true');
-    const { data: { name: channelName, id } } = await addChannel(values);
+    const res = await addChannel(values);
+    if (res.data) {
+      const { data: { name: channelName, id } } = res;
+      toast.success(t('chat.notifications.add'));
+      changeToNewChannel(channelName, id);
+    } else {
+      const textPathI18n = getErrorTextI18n(res);
+      toast.error(t(textPathI18n));
+    }
     setDisabled(null);
-    changeToNewChannel(channelName, id);
     onHide();
   };
 
@@ -39,7 +50,7 @@ const AddChannelModal = ({ onHide, schemas: { addChannelSchema } }) => {
     <>
       <Modal.Header closeButton>
         <Modal.Title id="contained-modal-title-vcenter">
-          Добавить канал
+          {t('chat.modals.add.title')}
         </Modal.Title>
       </Modal.Header>
       <Formik
@@ -59,13 +70,13 @@ const AddChannelModal = ({ onHide, schemas: { addChannelSchema } }) => {
                   name="name"
                   autoComplete="name"
                   required=""
-                  placeholder="Имя канала"
+                  placeholder={t('chat.modals.add.form.name')}
                   id="name"
                   className={`form-control ${
                     touched.name && errors.name ? 'is-invalid' : ''
                   }`}
                 />
-                <label htmlFor="name">Имя канала</label>
+                <label htmlFor="name">{t('chat.modals.add.form.name')}</label>
                 <ErrorMessage
                   component="div"
                   name="name"
@@ -74,8 +85,8 @@ const AddChannelModal = ({ onHide, schemas: { addChannelSchema } }) => {
               </div>
             </Modal.Body>
             <Modal.Footer>
-              <Button onClick={onHide} variant="secondary" disabled={disabled}>Отменить</Button>
-              <Button type="submit" disabled={disabled}>Отправить</Button>
+              <Button onClick={onHide} variant="secondary" disabled={disabled}>{t('chat.modals.add.form.cancel')}</Button>
+              <Button type="submit" disabled={disabled}>{t('chat.modals.add.form.submit')}</Button>
             </Modal.Footer>
           </Form>
         )}

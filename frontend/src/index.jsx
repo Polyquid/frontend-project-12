@@ -1,24 +1,19 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import './index.css';
-import { RouterProvider } from 'react-router-dom';
-import { Provider } from 'react-redux';
-import router from './utils/router.jsx';
-import store from './services/index.js';
-import reportWebVitals from './reportWebVitals';
-import App from './components/App.jsx';
+import init from './init.jsx';
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
-  <React.StrictMode>
-    <Provider store={store}>
-      <RouterProvider router={router}>
-        <App />
-      </RouterProvider>
-    </Provider>
-  </React.StrictMode>,
-);
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+const run = async () => {
+  const root = ReactDOM.createRoot(document.getElementById('root'));
+  const App = await init();
+  root.render(
+    <React.StrictMode>
+      {App}
+      <ToastContainer autoClose={3000} />
+    </React.StrictMode>,
+  );
+};
+
+run();

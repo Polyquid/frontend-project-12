@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { useEffect, useRef, useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
@@ -8,6 +9,7 @@ const MessagesForm = ({ currentChannelId, username }) => {
   const [body, setBody] = useState('');
   const innerRef = useRef();
   const [addMessage] = useAddMessageMutation();
+  const { t } = useTranslation();
 
   const handleSubmit = (channelId) => (e) => {
     e.preventDefault();
@@ -34,7 +36,7 @@ const MessagesForm = ({ currentChannelId, username }) => {
             type="text"
             name="body"
             required=""
-            placeholder="Введите сообщение..."
+            placeholder={t('chat.messages.form.newMessage')}
             id="body"
             className="form-control"
             value={body}

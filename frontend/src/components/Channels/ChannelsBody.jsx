@@ -1,14 +1,16 @@
 import Button from 'react-bootstrap/esm/Button';
 import Dropdown from 'react-bootstrap/Dropdown';
+import { useTranslation } from 'react-i18next';
 
 const ChannelsBody = ({ data, currentChannelName, handlers }) => {
+  const { t } = useTranslation();
   const renderButton = (name, id) => (
     <button
       type="button"
       className={`w-100 text-start rounded-0 btn ${currentChannelName === name ? 'btn-secondary' : ''}`}
       onClick={handlers.handleSetCurrentChannel(name, id)}
     >
-      <span className="me-1">#</span>
+      <span className="me-1">{t('chat.channels.marker')}</span>
       {name}
     </button>
   );
@@ -24,15 +26,15 @@ const ChannelsBody = ({ data, currentChannelName, handlers }) => {
         variant={currentChannelName === name ? 'secondary' : 'none'}
         onClick={handlers.handleSetCurrentChannel(name, id)}
       >
-        <span className="me-1">#</span>
+        <span className="me-1">{t('chat.channels.marker')}</span>
         {name}
       </Button>
 
       <Dropdown.Toggle className="w-25 rounded-0" split variant={currentChannelName === name ? 'secondary' : 'none'} />
 
       <Dropdown.Menu className="w-100">
-        <Dropdown.Item onClick={handlers.handleDeleteChannel}>Удалить</Dropdown.Item>
-        <Dropdown.Item onClick={handlers.handleRenameChannel}>Переименовать</Dropdown.Item>
+        <Dropdown.Item onClick={handlers.handleDeleteChannel}>{t('chat.channels.removeButton')}</Dropdown.Item>
+        <Dropdown.Item onClick={handlers.handleRenameChannel}>{t('chat.channels.renameButton')}</Dropdown.Item>
       </Dropdown.Menu>
     </Dropdown>
   );

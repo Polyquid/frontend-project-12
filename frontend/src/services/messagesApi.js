@@ -34,7 +34,6 @@ export const messagesApi = createApi({
         try {
           await cacheDataLoaded;
           const listener = (data) => {
-            console.log(data);
             updateCachedData((draft) => {
               draft.push(data);
             });

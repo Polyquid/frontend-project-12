@@ -1,10 +1,10 @@
 import * as Yup from 'yup';
 
-const getLoginSchema = () => Yup.object({
+const getLoginSchema = ({ required }) => Yup.object({
   username: Yup.string()
-    .required('Обязательно для заполнения'),
+    .required(required),
   password: Yup.string()
-    .required('Обязательно для заполнения'),
+    .required(required),
 });
 
 export default getLoginSchema;

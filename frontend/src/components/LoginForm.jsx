@@ -5,35 +5,42 @@ import {
   Field,
   ErrorMessage,
 } from 'formik';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useTranslation } from 'react-i18next';
+import { toast } from 'react-toastify';
 import getLoginSchema from '../utils/validation/getLoginSchema';
 import setAuthDataInLocalStorage from '../utils/setAuthDataInLocalStorage';
-import { setAuthToken, setUserName } from '../services/authSlice';
+import { usePostAuthDataMutation } from '../services/authApi';
+import getErrorTextI18n from '../utils/getErrorTextI18n';
 
 const LoginForm = () => {
-  const [isInvalidResponse, setIsInvalidResponse] = useState(false);
+  const [isInvalidData, setIsInvalidData] = useState(false);
   const [disabled, setDisabled] = useState(null);
+  const [postAuthData] = usePostAuthDataMutation();
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const { t } = useTranslation();
 
-  const signUpSchema = getLoginSchema();
+  const errorsTexts = {
+    required: t('login.form.errors.required'),
+  };
+  const signUpSchema = getLoginSchema(errorsTexts);
   const handleSubmit = async (values) => {
-    try {
-      setDisabled('true');
-      const { data: { token, username } } = await axios.post('/api/v1/login', values);
+    setDisabled('true');
+    const res = await postAuthData(values);
+    if (res.data) {
+      const { data: { username, token } } = res;
       setAuthDataInLocalStorage(token, username);
-      dispatch(setAuthToken({ token }));
-      dispatch(setUserName({ username }));
-      setIsInvalidResponse(false);
+      setIsInvalidData(false);
       navigate('/', { replace: false });
-    } catch (e) {
-      if (e.status === 401) {
-        setIsInvalidResponse(true);
+      setDisabled(null);
+    } else {
+      const textPathI18n = getErrorTextI18n(res);
+      if (textPathI18n === 'invalidData') {
+        setIsInvalidData(true);
+      } else {
+        toast.error(t(textPathI18n));
       }
-    } finally {
       setDisabled(null);
     }
   };
@@ -58,7 +65,7 @@ const LoginForm = () => {
               placeholder="Ваш ник"
               id="username"
               className={`form-control ${
-                (touched.username && errors.username) || isInvalidResponse ? 'is-invalid' : ''
+                (touched.username && errors.username) || isInvalidData ? 'is-invalid' : ''
               }`}
             />
             <label htmlFor="username">Ваш ник</label>
@@ -77,7 +84,7 @@ const LoginForm = () => {
               type="password"
               id="password"
               className={`form-control ${
-                (touched.password && errors.password) || isInvalidResponse ? 'is-invalid' : ''
+                (touched.password && errors.password) || isInvalidData ? 'is-invalid' : ''
               }`}
             />
             <label htmlFor="password">Пароль</label>
@@ -86,7 +93,7 @@ const LoginForm = () => {
               name="password"
               className="invalid-feedback"
             />
-            {isInvalidResponse ? <div className="invalid-tooltip" style={{ display: 'block' }}>Неверные имя пользователя или пароль</div> : null}
+            {isInvalidData ? <div className="invalid-tooltip" style={{ display: 'block' }}>{t('login.form.errors.invalidRequest')}</div> : null}
           </div>
           <button type="submit" className="w-100 mb-3 btn btn-outline-primary" disabled={disabled}>
             Войти

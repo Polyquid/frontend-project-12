@@ -16,7 +16,7 @@ const initialState = {
 };
 
 const uiSlice = createSlice({
-  name: 'auth',
+  name: 'ui',
   initialState,
   reducers: {
     setCurrentChannel: (state, { payload: currentChannel }) => ({ ...state, currentChannel }),
