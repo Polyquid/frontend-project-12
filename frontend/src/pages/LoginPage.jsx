@@ -11,11 +11,6 @@ const LoginPage = () => {
   const { t } = useTranslation();
 
   const handleClick = () => navigate('/signup', { replace: false });
-  const handleKeyUp = (e) => {
-    if (e.code === 'Enter') {
-      navigate('/signup', { replace: false });
-    }
-  };
   const localStorageToken = localStorage.getItem('token');
 
   useEffect(() => {
@@ -38,7 +33,7 @@ const LoginPage = () => {
               <div className="card-footer p-4">
                 <div className="d-flex flex-column align-items-center">
                   <span className="mb-3">{t('login.noAccount')}</span>
-                  <button type="button" className="btn btn-outline-primary" onClick={handleClick} onKeyUp={handleKeyUp}>{t('login.signupLink')}</button>
+                  <button type="button" className="btn btn-outline-primary" onClick={handleClick}>{t('login.signupLink')}</button>
                 </div>
               </div>
             </div>
