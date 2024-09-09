@@ -40,8 +40,7 @@ export const messagesApi = createApi({
           };
           socket.on('newMessage', listener);
         } catch {
-          // no-op in case `cacheEntryRemoved` resolves before `cacheDataLoaded`,
-          // in which case `cacheDataLoaded` will throw
+          throw new Error();
         }
         await cacheEntryRemoved;
         socket.disconnect();

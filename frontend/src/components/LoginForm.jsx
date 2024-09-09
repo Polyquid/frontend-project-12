@@ -26,7 +26,7 @@ const LoginForm = () => {
   };
   const signUpSchema = getLoginSchema(errorsTexts);
   const handleSubmit = async (values) => {
-    setDisabled('true');
+    setDisabled(true);
     const res = await postAuthData(values);
     if (res.data) {
       const { data: { username, token } } = res;
@@ -38,10 +38,11 @@ const LoginForm = () => {
       const textPathI18n = getErrorTextI18n(res);
       if (textPathI18n === 'invalidData') {
         setIsInvalidData(true);
+        setDisabled(null);
       } else {
         toast.error(t(textPathI18n));
+        setDisabled(null);
       }
-      setDisabled(null);
     }
   };
 

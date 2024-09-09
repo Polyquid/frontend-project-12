@@ -65,8 +65,7 @@ export const channelsApi = createApi({
           socket.on('removeChannel', listenerRemoveChannelEvent);
           socket.on('renameChannel', listenerRenameChannelEvent);
         } catch {
-          // no-op in case `cacheEntryRemoved` resolves before `cacheDataLoaded`,
-          // in which case `cacheDataLoaded` will throw
+          throw new Error();
         }
         await cacheEntryRemoved;
         socket.disconnect();
