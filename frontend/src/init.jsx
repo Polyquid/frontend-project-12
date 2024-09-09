@@ -1,5 +1,4 @@
 import { Provider as RollbarProvider, ErrorBoundary } from '@rollbar/react';
-import Rollbar from 'rollbar';
 // import i18next from 'i18next';
 // import { I18nextProvider, initReactI18next } from 'react-i18next';
 // import { Provider } from 'react-redux';
@@ -31,9 +30,8 @@ const init = async () => {
     accessToken: '765d232201e348538ba66a7b8b67c4ea',
     environment: 'testenv',
   };
-  const rollbar = new Rollbar(rollbarConfig);
   return (
-    <RollbarProvider config={rollbar}>
+    <RollbarProvider config={rollbarConfig}>
       <ErrorBoundary>
         <TestError />
         {/* <I18nextProvider i18n={i18nextInstance}>
