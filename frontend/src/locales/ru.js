@@ -48,6 +48,7 @@ const ru = {
         title: 'Каналы',
         removeButton: 'Удалить',
         renameButton: 'Переименовать',
+        addButton: '+',
         marker: '#',
       },
       messages: {
