@@ -30,7 +30,9 @@ const ChannelsBody = ({ data, currentChannelName, handlers }) => {
         {name}
       </Button>
 
-      <Dropdown.Toggle className="w-25 rounded-0" split variant={currentChannelName === name ? 'secondary' : 'none'} />
+      <Dropdown.Toggle className="w-25 rounded-0" split variant={currentChannelName === name ? 'secondary' : 'none'}>
+        <span className="visually-hidden">{t('chat.channels.editButton')}</span>
+      </Dropdown.Toggle>
 
       <Dropdown.Menu className="w-100">
         <Dropdown.Item onClick={handlers.handleDeleteChannel}>{t('chat.channels.removeButton')}</Dropdown.Item>

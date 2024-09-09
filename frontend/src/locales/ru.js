@@ -49,6 +49,7 @@ const ru = {
         removeButton: 'Удалить',
         renameButton: 'Переименовать',
         addButton: '+',
+        editButton: 'Управление каналом',
         marker: '#',
       },
       messages: {
