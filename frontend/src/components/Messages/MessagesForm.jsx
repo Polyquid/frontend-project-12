@@ -43,6 +43,7 @@ const MessagesForm = ({ currentChannelId, username }) => {
             id="body"
             className="form-control"
             value={body}
+            aria-label="Новое сообщение"
             onChange={(e) => {
               setBody(e.target.value);
             }}
