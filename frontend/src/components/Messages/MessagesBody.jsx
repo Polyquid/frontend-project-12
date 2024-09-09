@@ -1,4 +1,11 @@
+import { useEffect, useRef } from 'react';
+
 const MessagesBody = ({ currentMessages }) => {
+  const messagesEndRef = useRef(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
   const renderMessages = () => {
     if (!currentMessages) {
       return null;
@@ -12,9 +19,14 @@ const MessagesBody = ({ currentMessages }) => {
     ));
   };
 
+  useEffect(() => {
+    scrollToBottom();
+  }, [currentMessages]);
+
   return (
     <div className="chat-messages overflow-auto px-5 ">
       {renderMessages()}
+      <div ref={messagesEndRef} />
     </div>
   );
 };

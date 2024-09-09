@@ -1,5 +1,4 @@
 const getErrorTextI18n = ({ error }) => {
-  console.log(error);
   switch (error.status) {
     case 401:
       return 'invalidData';

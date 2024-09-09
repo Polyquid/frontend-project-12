@@ -4,6 +4,7 @@ import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import Button from 'react-bootstrap/Button';
 import { useAddMessageMutation } from '../../services/messagesApi';
+import getLeoProfanityInstance from '../../utils/getLeoProfanityInstance';
 
 const MessagesForm = ({ currentChannelId, username }) => {
   const [body, setBody] = useState('');
@@ -11,10 +12,11 @@ const MessagesForm = ({ currentChannelId, username }) => {
   const [addMessage] = useAddMessageMutation();
   const { t } = useTranslation();
 
+  const filter = getLeoProfanityInstance();
   const handleSubmit = (channelId) => (e) => {
     e.preventDefault();
     const newMessage = {
-      body,
+      body: filter.clean(body),
       channelId,
       username,
     };
@@ -22,12 +24,13 @@ const MessagesForm = ({ currentChannelId, username }) => {
     setBody('');
   };
 
-  useEffect(() => innerRef.current && innerRef.current.focus());
+  useEffect(() => innerRef?.current?.focus());
+  useEffect(() => setBody(''), [currentChannelId]);
 
   return (
     <div className="mt-auto px-5 py-3">
       <Form
-        className="py-1 border rounded-2"
+        className="py-1"
         onSubmit={handleSubmit(currentChannelId)}
       >
         <InputGroup>

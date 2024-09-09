@@ -14,6 +14,7 @@ import { toast } from 'react-toastify';
 import { useAddChannelMutation } from '../../services/channelsApi';
 import { setCurrentChannel } from '../../services/uiSlice';
 import getErrorTextI18n from '../../utils/getErrorTextI18n';
+import getLeoProfanityInstance from '../../utils/getLeoProfanityInstance';
 
 const AddChannelModal = ({ onHide, schemas: { addChannelSchema } }) => {
   const [disabled, setDisabled] = useState(null);
@@ -22,12 +23,13 @@ const AddChannelModal = ({ onHide, schemas: { addChannelSchema } }) => {
   const [addChannel] = useAddChannelMutation();
   const { t } = useTranslation();
 
+  const filter = getLeoProfanityInstance();
   const changeToNewChannel = (channelName, id) => {
     dispatch(setCurrentChannel({ name: channelName, id }));
   };
-  const handleAddSubmit = async (values) => {
+  const handleAddSubmit = async ({ name }) => {
     setDisabled('true');
-    const res = await addChannel(values);
+    const res = await addChannel({ name: filter.clean(name) });
     if (res.data) {
       const { data: { name: channelName, id } } = res;
       toast.success(t('chat.notifications.add'));
