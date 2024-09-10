@@ -20,9 +20,10 @@ const ChannelsBody = ({ data, currentChannelName, handlers }) => {
       align="end"
       variant={currentChannelName === name ? 'secondary' : 'none'}
       drop="down"
+      className="d-flex btn-group"
     >
       <Button
-        className="w-75 text-start rounded-0 text-truncate"
+        className="w-100 text-start rounded-0 text-truncate"
         variant={currentChannelName === name ? 'secondary' : 'none'}
         onClick={handlers.handleSetCurrentChannel(name, id)}
       >
@@ -30,7 +31,7 @@ const ChannelsBody = ({ data, currentChannelName, handlers }) => {
         {name}
       </Button>
 
-      <Dropdown.Toggle className="w-25 rounded-0" split variant={currentChannelName === name ? 'secondary' : 'none'}>
+      <Dropdown.Toggle split variant={currentChannelName === name ? 'secondary' : 'none'}>
         <span className="visually-hidden">{t('chat.channels.editButton')}</span>
       </Dropdown.Toggle>
 
