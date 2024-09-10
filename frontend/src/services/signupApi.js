@@ -1,7 +1,8 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import apiRouter from '../utils/apiRouter';
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: '/api/v1/signup',
+  baseUrl: apiRouter.getBaseSignup(),
 });
 
 export const signupApi = createApi({

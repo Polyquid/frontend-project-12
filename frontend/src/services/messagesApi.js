@@ -1,10 +1,11 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import getSocket from '../utils/getSocket';
+import apiRouter from '../utils/apiRouter';
 
 const socket = getSocket();
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: '/api/v1/messages',
+  baseUrl: apiRouter.getBaseMessages(),
   prepareHeaders: (headers, { getState }) => {
     const { token } = getState().auth;
 

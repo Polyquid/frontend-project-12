@@ -1,11 +1,12 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import getSocket from '../utils/getSocket';
 import { setCurrentChannel } from './uiSlice';
+import apiRouter from '../utils/apiRouter';
 
 const socket = getSocket();
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: '/api/v1/channels',
+  baseUrl: apiRouter.getBaseChannel(),
   prepareHeaders: (headers, { getState }) => {
     const { token } = getState().auth;
 

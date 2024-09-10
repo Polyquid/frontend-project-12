@@ -1,3 +1,5 @@
+import React from 'react';
+import ReactDOM from 'react-dom/client';
 import { Provider as RollbarProvider, ErrorBoundary } from '@rollbar/react';
 import i18next from 'i18next';
 import { I18nextProvider, initReactI18next } from 'react-i18next';
@@ -26,19 +28,23 @@ const init = async () => {
     accessToken: process.env.ROLLBAR_PRODUCTION_TOKEN,
     environment: 'production',
   };
-  return (
-    <RollbarProvider config={rollbarConfig}>
-      <ErrorBoundary>
-        <I18nextProvider i18n={i18nextInstance}>
-          <Provider store={store}>
-            <RouterProvider router={router}>
-              <App />
-            </RouterProvider>
-            <ToastContainer autoClose={3000} />
-          </Provider>
-        </I18nextProvider>
-      </ErrorBoundary>
-    </RollbarProvider>
+
+  const root = ReactDOM.createRoot(document.getElementById('root'));
+  root.render(
+    <React.StrictMode>
+      <RollbarProvider config={rollbarConfig}>
+        <ErrorBoundary>
+          <I18nextProvider i18n={i18nextInstance}>
+            <Provider store={store}>
+              <RouterProvider router={router}>
+                <App />
+              </RouterProvider>
+              <ToastContainer autoClose={3000} />
+            </Provider>
+          </I18nextProvider>
+        </ErrorBoundary>
+      </RollbarProvider>
+    </React.StrictMode>,
   );
 };
 
