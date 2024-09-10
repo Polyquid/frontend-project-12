@@ -23,7 +23,7 @@ const ChannelsBody = ({ data, currentChannelName, handlers }) => {
       className="d-flex btn-group"
     >
       <Button
-        className="w-100 text-start rounded-0 text-truncate"
+        className="w-100 rounded-0 text-start text-truncate"
         variant={currentChannelName === name ? 'secondary' : 'none'}
         onClick={handlers.handleSetCurrentChannel(name, id)}
       >
