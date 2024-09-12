@@ -25,7 +25,6 @@ const MessagesForm = ({ currentChannelId, username }) => {
   };
 
   useEffect(() => innerRef?.current?.focus());
-  useEffect(() => setBody(''), [currentChannelId]);
 
   return (
     <div className="mt-auto px-5 py-3">
