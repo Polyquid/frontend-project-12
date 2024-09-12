@@ -2,13 +2,16 @@ import { useSelector } from 'react-redux';
 import MessagesBody from './MessagesBody';
 import MessagesForm from './MessagesForm';
 import MessagesHeader from './MessagesHeader';
+import { useGetMessagesQuery } from '../../services/messagesApi';
 
-const Messages = ({ data, username }) => {
+const Messages = () => {
+  const { data } = useGetMessagesQuery();
   const { name, id } = useSelector(({ ui }) => ({
     name: ui.currentChannel.name ?? ui.defaultChannel.name,
     id: ui.currentChannel.id ?? ui.defaultChannel.id,
   }));
 
+  const username = localStorage.getItem('username');
   const currentMessages = data?.filter(({ channelId }) => channelId === id);
 
   return (
