@@ -48,20 +48,14 @@ const ChannelsBody = ({
       </Dropdown.Menu>
     </Dropdown>
   );
-  const renderChannels = () => {
-    if (data) {
-      return data.map(({ id, name, removable }) => (
-        <li key={id} id={`${id}`} name={`${name}`} className="nav-item w-100" onClick={onClickChannel} role="presentation">
-          {removable ? renderDropdown(name, id) : renderButton(name, id)}
-        </li>
-      ));
-    }
-    return null;
-  };
 
   return (
     <ul id="channels-box" className="nav flex-column nav-pills nav-fill px-2 mb-3 overflow-auto h-100 d-block">
-      {renderChannels()}
+      {data?.map(({ id, name, removable }) => (
+        <li key={id} id={`${id}`} name={`${name}`} className="nav-item w-100" onClick={onClickChannel} role="presentation">
+          {removable ? renderDropdown(name, id) : renderButton(name, id)}
+        </li>
+      ))}
     </ul>
   );
 };
