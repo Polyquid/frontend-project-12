@@ -39,17 +39,18 @@ const Channels = () => {
     const name = e.currentTarget.getAttribute('name');
     dispatch(setClickedChannel({ name, id }));
   };
-  const handlers = {
-    handleSetCurrentChannel,
-    handleDeleteChannel,
-    handleRenameChannel,
-    handleClickChannel,
-  };
 
   return (
     <div className="col-4 col-md-2 border-end px-0 bg-light flex-column h-100 d-flex">
-      <ChannelsHeader handleClick={handleAddChannel} />
-      <ChannelsBody data={data} currentChannelName={currentChannelName} handlers={handlers} />
+      <ChannelsHeader onClickAddButton={handleAddChannel} />
+      <ChannelsBody
+        data={data}
+        currentChannelName={currentChannelName}
+        onClickChannel={handleClickChannel}
+        onDeleteChannel={handleDeleteChannel}
+        onRenameChannel={handleRenameChannel}
+        onSetCurrentChannel={handleSetCurrentChannel}
+      />
       <ChatModal
         name={modalName}
         show={modalShow}
