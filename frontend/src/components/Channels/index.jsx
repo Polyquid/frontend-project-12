@@ -2,8 +2,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
   setClickedChannel,
   setCurrentChannel,
-  setCurrentModalName,
-  setCurrentModalShow,
+  setCurrentModal,
 } from '../../services/uiSlice';
 import ChannelsHeader from './ChannelsHeader';
 import ChannelsBody from './ChannelsBody';
@@ -20,22 +19,19 @@ const Channels = () => {
 
   const channelsNames = data?.map(({ name }) => name);
   const handleModalHide = () => {
-    dispatch(setCurrentModalShow({ show: false }));
+    dispatch(setCurrentModal({ name: '', show: false }));
   };
   const handleSetCurrentChannel = (name, id) => () => {
     dispatch(setCurrentChannel({ name, id }));
   };
   const handleAddChannel = () => {
-    dispatch(setCurrentModalShow({ show: true }));
-    dispatch(setCurrentModalName({ name: 'addChannel' }));
+    dispatch(setCurrentModal({ name: 'addChannel', show: true }));
   };
   const handleDeleteChannel = () => {
-    dispatch(setCurrentModalShow({ show: true }));
-    dispatch(setCurrentModalName({ name: 'deleteChannel' }));
+    dispatch(setCurrentModal({ name: 'deleteChannel', show: true }));
   };
   const handleRenameChannel = () => {
-    dispatch(setCurrentModalShow({ show: true }));
-    dispatch(setCurrentModalName({ name: 'renameChannel' }));
+    dispatch(setCurrentModal({ name: 'renameChannel', show: true }));
   };
   const handleClickChannel = (e) => {
     e.stopPropagation();

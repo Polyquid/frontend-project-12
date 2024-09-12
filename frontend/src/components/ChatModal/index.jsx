@@ -35,7 +35,7 @@ const ChatModal = ({
     renameChannelSchema: getRenameChannelSchema(validationData ?? [], renameErrorsTests),
   };
 
-  const ModalBody = mapModal[name];
+  const ModalBody = mapModal[name] ?? (() => null);
   return (
     <Modal
       show={show}
