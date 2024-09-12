@@ -4,7 +4,10 @@ import MessagesForm from './MessagesForm';
 import MessagesHeader from './MessagesHeader';
 
 const Messages = ({ data, username }) => {
-  const { name, id } = useSelector((state) => state.ui.currentChannel);
+  const { name, id } = useSelector(({ ui }) => ({
+    name: ui.currentChannel.name ?? ui.defaultChannel.name,
+    id: ui.currentChannel.id ?? ui.defaultChannel.id,
+  }));
 
   const currentMessages = data?.filter(({ channelId }) => channelId === id);
 

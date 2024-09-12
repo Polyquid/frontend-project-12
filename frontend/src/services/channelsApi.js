@@ -7,14 +7,7 @@ const socket = getSocket();
 
 const baseQuery = fetchBaseQuery({
   baseUrl: getChannelPath(),
-  prepareHeaders: (headers, { getState }) => {
-    const { token } = getState().auth;
-
-    if (token) {
-      headers.set('authorization', `Bearer ${token}`);
-      return headers;
-    }
-
+  prepareHeaders: (headers) => {
     const localStorageToken = localStorage.getItem('token');
     headers.set('authorization', `Bearer ${localStorageToken}`);
 
@@ -48,10 +41,10 @@ export const channelsApi = createApi({
           };
           const listenerRemoveChannelEvent = ({ id: removedId }) => {
             updateCachedData((draft) => draft.filter(({ id }) => id !== removedId));
-            const { ui: { currentChannel, clickedChannel } } = getState();
+            const { ui: { currentChannel, clickedChannel, defaultChannel } } = getState();
             console.log(getState());
             if (currentChannel.id === clickedChannel.id) {
-              dispatch(setCurrentChannel({ name: 'general', id: '1' }));
+              dispatch(setCurrentChannel(defaultChannel));
             }
           };
           const listenerRenameChannelEvent = (data) => {

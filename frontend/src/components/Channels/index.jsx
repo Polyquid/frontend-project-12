@@ -10,7 +10,9 @@ import ChannelsBody from './ChannelsBody';
 
 const Channels = ({ data }) => {
   const dispatch = useDispatch();
-  const currentChannelName = useSelector((state) => state.ui.currentChannel.name);
+  const currentChannelName = useSelector(({
+    ui,
+  }) => ui.currentChannel.name ?? ui.defaultChannel.name);
 
   const handleSetCurrentChannel = (name, id) => () => {
     dispatch(setCurrentChannel({ name, id }));

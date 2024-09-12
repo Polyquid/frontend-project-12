@@ -1,17 +1,21 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  currentChannel: {
+  defaultChannel: {
     name: 'general',
     id: '1',
   },
+  currentChannel: {
+    name: undefined,
+    id: null,
+  },
   currentModal: {
-    name: '',
+    name: undefined,
     show: false,
   },
   clickedChannel: {
+    name: undefined,
     id: null,
-    name: '',
   },
 };
 

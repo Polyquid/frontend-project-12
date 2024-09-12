@@ -6,14 +6,7 @@ const socket = getSocket();
 
 const baseQuery = fetchBaseQuery({
   baseUrl: getMessagesPath(),
-  prepareHeaders: (headers, { getState }) => {
-    const { token } = getState().auth;
-
-    if (token) {
-      headers.set('authorization', `Bearer ${token}`);
-      return headers;
-    }
-
+  prepareHeaders: (headers) => {
     const localStorageToken = localStorage.getItem('token');
     headers.set('authorization', `Bearer ${localStorageToken}`);
 
