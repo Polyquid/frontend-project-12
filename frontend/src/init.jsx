@@ -26,7 +26,7 @@ const init = async () => {
 
   const rollbarConfig = {
     accessToken: process.env.ROLLBAR_PRODUCTION_TOKEN,
-    environment: 'production',
+    environment: process.env.NODE_ENV,
   };
 
   const root = ReactDOM.createRoot(document.getElementById('root'));
