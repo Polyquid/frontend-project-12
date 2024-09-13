@@ -25,16 +25,15 @@ const Header = () => {
         <Navbar.Brand href="/">{t('header.title')}</Navbar.Brand>
         <Navbar.Collapse className="justify-content-end">
           {currentUserName
-            ? (
-              <>
-                <Navbar.Text>
-                  {t('header.signedAs')}
-                  <b className="text-primary">{`${currentUserName}`}</b>
-                </Navbar.Text>
-                <Button variant="primary" className="mx-1" onClick={handleClick}>{t('header.exit')}</Button>
-              </>
-            )
-            : null}
+          && (
+          <>
+            <Navbar.Text>
+              {t('header.signedAs')}
+              <b className="text-primary">{`${currentUserName}`}</b>
+            </Navbar.Text>
+            <Button variant="primary" className="mx-1" onClick={handleClick}>{t('header.exit')}</Button>
+          </>
+          )}
         </Navbar.Collapse>
       </Container>
     </Navbar>
