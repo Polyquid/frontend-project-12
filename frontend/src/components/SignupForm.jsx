@@ -7,17 +7,20 @@ import {
 } from 'formik';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 import getSignupSchema from '../utils/validation/getSignupSchema';
 import setAuthDataInLocalStorage from '../utils/setAuthDataInLocalStorage';
 import { usePostSignupDataMutation } from '../services/signupApi';
+import { setAuthData } from '../services/authDataSlice';
 import getErrorTextI18n from '../utils/getErrorTextI18n';
 
 const SignupForm = () => {
   const [isNotUniq, setIsNotUniq] = useState(false);
   const [disabled, setDisabled] = useState(null);
   const [postSignupData] = usePostSignupDataMutation();
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const { t } = useTranslation();
 
@@ -31,12 +34,13 @@ const SignupForm = () => {
   };
   const signUpSchema = getSignupSchema(errorsTexts);
   const handleSubmit = async ({ confirmPassword, ...values }) => {
-    setDisabled('true');
+    setDisabled('on');
     const res = await postSignupData(values);
     if (res.data) {
-      const { data: { token, username } } = res;
-      setAuthDataInLocalStorage(token, username);
+      const { data: authData } = res;
+      setAuthDataInLocalStorage(authData);
       setIsNotUniq(false);
+      dispatch(setAuthData(authData));
       navigate('/', { replace: false });
       setDisabled(null);
     } else {

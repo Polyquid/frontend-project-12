@@ -1,4 +1,4 @@
-const setAuthDataInLocalStorage = (token, username) => {
+const setAuthDataInLocalStorage = ({ token, username }) => {
   if (localStorage.getItem('token') !== null) {
     localStorage.removeItem('token');
   }

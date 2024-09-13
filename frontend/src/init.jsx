@@ -4,12 +4,10 @@ import { Provider as RollbarProvider, ErrorBoundary } from '@rollbar/react';
 import i18next from 'i18next';
 import { I18nextProvider, initReactI18next } from 'react-i18next';
 import { Provider } from 'react-redux';
-import { RouterProvider } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import resources from './locales/index.js';
-import router from './utils/router.jsx';
 import store from './services/index.js';
-import App from './components/App.jsx';
+import App from './App.jsx';
 
 const init = async () => {
   const i18nextInstance = i18next.createInstance();
@@ -36,9 +34,7 @@ const init = async () => {
         <ErrorBoundary>
           <I18nextProvider i18n={i18nextInstance}>
             <Provider store={store}>
-              <RouterProvider router={router}>
-                <App />
-              </RouterProvider>
+              <App />
               <ToastContainer autoClose={3000} />
             </Provider>
           </I18nextProvider>

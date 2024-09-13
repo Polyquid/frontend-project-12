@@ -9,15 +9,18 @@ import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
+import { useDispatch } from 'react-redux';
 import getLoginSchema from '../utils/validation/getLoginSchema';
 import setAuthDataInLocalStorage from '../utils/setAuthDataInLocalStorage';
 import { usePostAuthDataMutation } from '../services/authApi';
 import getErrorTextI18n from '../utils/getErrorTextI18n';
+import { setAuthData } from '../services/authDataSlice';
 
 const LoginForm = () => {
   const [isInvalidData, setIsInvalidData] = useState(false);
   const [disabled, setDisabled] = useState(null);
   const [postAuthData] = usePostAuthDataMutation();
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const { t } = useTranslation();
 
@@ -29,8 +32,9 @@ const LoginForm = () => {
     setDisabled(true);
     const res = await postAuthData(values);
     if (res.data) {
-      const { data: { username, token } } = res;
-      setAuthDataInLocalStorage(token, username);
+      const { data: authData } = res;
+      setAuthDataInLocalStorage(authData);
+      dispatch(setAuthData(authData));
       setIsInvalidData(false);
       navigate('/', { replace: false });
       setDisabled(null);
