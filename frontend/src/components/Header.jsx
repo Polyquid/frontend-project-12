@@ -13,29 +13,10 @@ const Header = () => {
   const { t } = useTranslation();
 
   const currentUserName = useSelector(({ authData }) => authData.username);
-  const renderUserName = () => {
-    if (currentUserName) {
-      return (
-        <Navbar.Text>
-          {t('header.signedAs')}
-          <b className="text-primary">{`${currentUserName}`}</b>
-        </Navbar.Text>
-      );
-    }
-    return null;
-  };
   const handleClick = () => {
     resetAuthDataInLocalStorage();
     dispatch(resetAuthData());
     navigate('/login', { replace: false });
-  };
-  const renderExitButton = () => {
-    if (currentUserName) {
-      return (
-        <Button variant="primary" className="mx-1" onClick={handleClick}>{t('header.exit')}</Button>
-      );
-    }
-    return null;
   };
 
   return (
@@ -43,8 +24,17 @@ const Header = () => {
       <Container>
         <Navbar.Brand href="/">{t('header.title')}</Navbar.Brand>
         <Navbar.Collapse className="justify-content-end">
-          {renderUserName()}
-          {renderExitButton()}
+          {currentUserName
+            ? (
+              <>
+                <Navbar.Text>
+                  {t('header.signedAs')}
+                  <b className="text-primary">{`${currentUserName}`}</b>
+                </Navbar.Text>
+                <Button variant="primary" className="mx-1" onClick={handleClick}>{t('header.exit')}</Button>
+              </>
+            )
+            : null}
         </Navbar.Collapse>
       </Container>
     </Navbar>

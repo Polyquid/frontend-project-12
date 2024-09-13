@@ -19,7 +19,7 @@ const init = async () => {
       interpolation: {
         escapeValue: false,
       },
-      debug: true,
+      debug: process.env.NODE_ENV === 'development',
     });
 
   const rollbarConfig = {

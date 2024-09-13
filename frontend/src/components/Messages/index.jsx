@@ -10,8 +10,8 @@ const Messages = () => {
     name: ui.currentChannel.name ?? ui.defaultChannel.name,
     id: ui.currentChannel.id ?? ui.defaultChannel.id,
   }));
+  const { username } = useSelector((state) => state.authData);
 
-  const username = localStorage.getItem('username');
   const currentMessages = data?.filter(({ channelId }) => channelId === id);
 
   return (
