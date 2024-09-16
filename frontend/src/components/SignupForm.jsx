@@ -8,8 +8,8 @@ import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 import classNames from 'classnames';
 import setAuthDataInLocalStorage from '../utils/setAuthDataInLocalStorage';
-import { usePostSignupDataMutation } from '../services/signupApi';
-import { setAuthData } from '../services/authDataSlice';
+import { usePostSignupDataMutation } from '../services/api/signupApi';
+import { setAuthData } from '../services/slices/authDataSlice';
 import getErrorTextI18n from '../utils/getErrorTextI18n';
 
 const SignupForm = () => {

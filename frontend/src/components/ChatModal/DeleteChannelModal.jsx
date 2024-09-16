@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
-import { useDeleteChannelMutation } from '../../services/channelsApi';
+import { useDeleteChannelMutation } from '../../services/api/channelsApi';
 import getErrorTextI18n from '../../utils/getErrorTextI18n';
 
 const DeleteChannelModal = ({ onHide }) => {

@@ -1,10 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { messagesApi } from './messagesApi';
-import { channelsApi } from './channelsApi';
-import uiSlice from './uiSlice';
-import { authApi } from './authApi';
-import { signupApi } from './signupApi';
-import authDataSlice from './authDataSlice';
+import { messagesApi } from './api/messagesApi';
+import { channelsApi } from './api/channelsApi';
+import { authApi } from './api/authApi';
+import { signupApi } from './api/signupApi';
+import uiSlice from './slices/uiSlice';
+import authDataSlice from './slices/authDataSlice';
 
 export default configureStore({
   reducer: {

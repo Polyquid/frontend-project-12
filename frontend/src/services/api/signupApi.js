@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { getSignupPath } from '../constants/apiRouter';
+import { getSignupPath } from '../../constants/apiRouter';
 
 const baseQuery = fetchBaseQuery({
   baseUrl: getSignupPath(),

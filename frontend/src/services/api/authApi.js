@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { getLoginPath } from '../constants/apiRouter';
+import { getLoginPath } from '../../constants/apiRouter';
 
 const baseQuery = fetchBaseQuery({
   baseUrl: getLoginPath(),

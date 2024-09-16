@@ -3,11 +3,11 @@ import {
   setClickedChannel,
   setCurrentChannel,
   setCurrentModal,
-} from '../../services/uiSlice';
+} from '../../services/slices/uiSlice';
 import ChannelsHeader from './ChannelsHeader';
 import ChannelsBody from './ChannelsBody';
 import ChatModal from '../ChatModal';
-import { useGetChannelsQuery } from '../../services/channelsApi';
+import { useGetChannelsQuery } from '../../services/api/channelsApi';
 
 const Channels = () => {
   const { data } = useGetChannelsQuery();

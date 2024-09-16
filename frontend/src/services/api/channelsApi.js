@@ -1,9 +1,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import getSocket from '../utils/getSocket';
-import { setCurrentChannel } from './uiSlice';
-import { getChannelPath } from '../constants/apiRouter';
-
-const socket = getSocket();
+import { setCurrentChannel } from '../slices/uiSlice';
+import { getChannelPath } from '../../constants/apiRouter';
+import socket from '../../utils/getSocket';
 
 const baseQuery = fetchBaseQuery({
   baseUrl: getChannelPath(),
@@ -45,7 +43,6 @@ export const channelsApi = createApi({
           const listenerRemoveChannelEvent = ({ id: removedId }) => {
             updateCachedData((draft) => draft.filter(({ id }) => id !== removedId));
             const { ui: { currentChannel, clickedChannel, defaultChannel } } = getState();
-            console.log(getState());
             if (currentChannel.id === clickedChannel.id) {
               dispatch(setCurrentChannel(defaultChannel));
             }

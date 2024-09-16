@@ -1,8 +1,7 @@
+/* eslint-disable import/no-cycle */
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import getSocket from '../utils/getSocket';
-import { getMessagesPath } from '../constants/apiRouter';
-
-const socket = getSocket();
+import { getMessagesPath } from '../../constants/apiRouter';
+import socket from '../../utils/getSocket';
 
 const baseQuery = fetchBaseQuery({
   baseUrl: getMessagesPath(),

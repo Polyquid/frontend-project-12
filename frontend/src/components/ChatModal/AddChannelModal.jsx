@@ -8,8 +8,8 @@ import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 import classNames from 'classnames';
-import { useAddChannelMutation } from '../../services/channelsApi';
-import { setCurrentChannel } from '../../services/uiSlice';
+import { useAddChannelMutation } from '../../services/api/channelsApi';
+import { setCurrentChannel } from '../../services/slices/uiSlice';
 import getErrorTextI18n from '../../utils/getErrorTextI18n';
 import getLeoProfanityInstance from '../../utils/getLeoProfanityInstance';
 

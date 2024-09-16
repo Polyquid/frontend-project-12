@@ -2,7 +2,7 @@ import { useSelector } from 'react-redux';
 import MessagesBody from './MessagesBody';
 import MessagesForm from './MessagesForm';
 import MessagesHeader from './MessagesHeader';
-import { useGetMessagesQuery } from '../../services/messagesApi';
+import { useGetMessagesQuery } from '../../services/api/messagesApi';
 
 const Messages = () => {
   const { data } = useGetMessagesQuery();

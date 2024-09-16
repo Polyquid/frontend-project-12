@@ -8,7 +8,7 @@ import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 import classNames from 'classnames';
-import { useEditChannelMutation } from '../../services/channelsApi';
+import { useEditChannelMutation } from '../../services/api/channelsApi';
 import getErrorTextI18n from '../../utils/getErrorTextI18n';
 
 const RenameChannelModal = ({ onHide, validationData }) => {
