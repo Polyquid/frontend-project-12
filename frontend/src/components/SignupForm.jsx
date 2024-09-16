@@ -1,24 +1,18 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import {
-  Formik,
-  Form,
-  Field,
-  ErrorMessage,
-} from 'formik';
+import Button from 'react-bootstrap/esm/Button';
+import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
+import classNames from 'classnames';
 import setAuthDataInLocalStorage from '../utils/setAuthDataInLocalStorage';
 import { usePostSignupDataMutation } from '../services/signupApi';
 import { setAuthData } from '../services/authDataSlice';
 import getErrorTextI18n from '../utils/getErrorTextI18n';
 
 const SignupForm = () => {
-  const [isNotUniq, setIsNotUniq] = useState(false);
-  const [disabled, setDisabled] = useState(null);
   const [postSignupData] = usePostSignupDataMutation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -32,118 +26,98 @@ const SignupForm = () => {
       password: t('signup.form.errors.passwordLength'),
     },
   };
-  const handleSubmit = async ({ confirmPassword, ...values }) => {
-    setDisabled('on');
+  const handleSubmit = async ({ confirmPassword, ...values }, { setErrors }) => {
     const res = await postSignupData(values);
     if (res.data) {
       const { data: authData } = res;
       setAuthDataInLocalStorage(authData);
-      setIsNotUniq(false);
       dispatch(setAuthData(authData));
       navigate('/', { replace: false });
-      setDisabled(null);
     } else {
       const textPathI18n = getErrorTextI18n(res);
       if (textPathI18n === 'notUniq') {
-        setIsNotUniq(true);
+        setErrors({ isNotUniq: true });
       } else {
         toast.error(t(textPathI18n));
       }
-      setDisabled(null);
     }
   };
+  const formik = useFormik({
+    initialValues: {
+      username: '',
+      password: '',
+      confirmPassword: '',
+    },
+    validationSchema: Yup.object({
+      username: Yup.string()
+        .min(3, errorsTexts.length.username)
+        .max(20, errorsTexts.length.username)
+        .required(errorsTexts.required),
+      password: Yup.string()
+        .min(6, errorsTexts.length.password)
+        .required(errorsTexts.required),
+      confirmPassword: Yup.string()
+        .min(6, errorsTexts.length.password)
+        .oneOf([Yup.ref('password'), null], errorsTexts.confirm)
+        .required(errorsTexts.required),
+    }),
+    onSubmit: handleSubmit,
+  });
 
   return (
-    <Formik
-      initialValues={{
-        username: '',
-        password: '',
-        confirmPassword: '',
-      }}
-      validationSchema={
-        Yup.object({
-          username: Yup.string()
-            .min(3, errorsTexts.username)
-            .max(20, errorsTexts.username)
-            .required(errorsTexts.required),
-          password: Yup.string()
-            .min(6, errorsTexts.password)
-            .required(errorsTexts.required),
-          confirmPassword: Yup.string()
-            .oneOf([Yup.ref('password'), null], errorsTexts.confirm)
-            .required(errorsTexts.required),
-        })
-    }
-      onSubmit={handleSubmit}
-    >
-      {({ errors, touched }) => (
-        <Form>
-          <div className="form-floating mb-3">
-            <Field
-              type="text"
-              name="username"
-              autoComplete="username"
-              required=""
-              placeholder="Имя пользователя"
-              id="username"
-              className={`form-control ${
-                (touched.username && errors.username) || isNotUniq ? 'is-invalid' : ''
-              }`}
-            />
-            <label htmlFor="username">Имя пользователя</label>
-            <ErrorMessage
-              component="div"
-              name="username"
-              className="invalid-feedback"
-            />
-          </div>
+    <form onSubmit={formik.handleSubmit}>
+      <div className="form-floating mb-3">
+        <input
+          type="text"
+          name="username"
+          autoComplete="username"
+          required=""
+          placeholder="Имя пользователя"
+          id="username"
+          value={formik.values.username}
+          onChange={formik.handleChange}
+          className={classNames('form-control', { 'is-invalid': !!formik.errors.username || !!formik.errors.isNotUniq })}
+        />
+        <label htmlFor="username">Имя пользователя</label>
+        {formik.errors.username && <div className="invalid-feedback">{formik.errors.username}</div>}
+      </div>
 
-          <div className="form-floating mb-3">
-            <Field
-              name="password"
-              autoComplete="password"
-              required=""
-              placeholder="Пароль"
-              type="password"
-              id="password"
-              className={`form-control ${
-                (touched.password && errors.password) || isNotUniq ? 'is-invalid' : ''
-              }`}
-            />
-            <label htmlFor="password">Пароль</label>
-            <ErrorMessage
-              component="div"
-              name="password"
-              className="invalid-feedback"
-            />
-          </div>
+      <div className="form-floating mb-3">
+        <input
+          name="password"
+          autoComplete="password"
+          required=""
+          placeholder="Пароль"
+          type="password"
+          id="password"
+          value={formik.values.password}
+          onChange={formik.handleChange}
+          className={classNames('form-control', { 'is-invalid': !!formik.errors.password || !!formik.errors.isNotUniq })}
+        />
+        <label htmlFor="password">Пароль</label>
+        {formik.errors.password && <div className="invalid-feedback">{formik.errors.password}</div>}
+      </div>
 
-          <div className="form-floating mb-4">
-            <Field
-              name="confirmPassword"
-              autoComplete="confirmPassword"
-              required=""
-              placeholder="Подтвердите пароль"
-              type="password"
-              id="confirmPassword"
-              className={`form-control ${
-                (touched.confirmPassword && errors.confirmPassword) || isNotUniq ? 'is-invalid' : ''
-              }`}
-            />
-            <label htmlFor="confirmPassword">Подтвердите пароль</label>
-            <ErrorMessage
-              component="div"
-              name="confirmPassword"
-              className="invalid-feedback"
-            />
-            {isNotUniq ? <div className="invalid-tooltip" style={{ display: 'block' }}>{t('signup.form.errors.invalidRequest')}</div> : null}
-          </div>
-          <button type="submit" className="w-100 mb-3 btn btn-outline-primary" disabled={disabled}>
-            Войти
-          </button>
-        </Form>
-      )}
-    </Formik>
+      <div className="form-floating mb-4">
+        <input
+          name="confirmPassword"
+          autoComplete="confirmPassword"
+          required=""
+          placeholder="Подтвердите пароль"
+          type="password"
+          id="confirmPassword"
+          value={formik.values.confirmPassword}
+          onChange={formik.handleChange}
+          className={classNames('form-control', { 'is-invalid': !!formik.errors.confirmPassword || !!formik.errors.isNotUniq })}
+        />
+        <label htmlFor="confirmPassword">Подтвердите пароль</label>
+        {formik.errors.confirmPassword && <div className="invalid-feedback">{formik.errors.confirmPassword}</div>}
+        {formik.errors.isNotUniq ? <div className="invalid-tooltip" style={{ display: 'block' }}>{t('signup.form.errors.invalidRequest')}</div> : null}
+      </div>
+      <Button type="submit" className="w-100 mb-3" variant="outline-primary" disabled={formik.isSubmitting}>
+        Войти
+      </Button>
+    </form>
   );
 };
 
