@@ -1,13 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { Provider as RollbarProvider, ErrorBoundary } from '@rollbar/react';
 import i18next from 'i18next';
-import { I18nextProvider, initReactI18next } from 'react-i18next';
-import { Provider } from 'react-redux';
-import { ToastContainer } from 'react-toastify';
+import { initReactI18next } from 'react-i18next';
 import resources from './locales/index.js';
-import store from './services/index.js';
 import App from './App.jsx';
+import store from './services/index.js';
+import router from './router';
 
 const init = async () => {
   const i18nextInstance = i18next.createInstance();
@@ -26,20 +24,15 @@ const init = async () => {
     accessToken: process.env.ROLLBAR_PRODUCTION_TOKEN,
     environment: process.env.NODE_ENV,
   };
-
   const root = ReactDOM.createRoot(document.getElementById('root'));
   root.render(
     <React.StrictMode>
-      <RollbarProvider config={rollbarConfig}>
-        <ErrorBoundary>
-          <I18nextProvider i18n={i18nextInstance}>
-            <Provider store={store}>
-              <App />
-              <ToastContainer autoClose={3000} />
-            </Provider>
-          </I18nextProvider>
-        </ErrorBoundary>
-      </RollbarProvider>
+      <App
+        rollbarConfig={rollbarConfig}
+        i18nextInstance={i18nextInstance}
+        store={store}
+        router={router}
+      />
     </React.StrictMode>,
   );
 };
