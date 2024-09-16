@@ -112,7 +112,7 @@ const SignupForm = () => {
         />
         <label htmlFor="confirmPassword">Подтвердите пароль</label>
         {formik.errors.confirmPassword && <div className="invalid-feedback">{formik.errors.confirmPassword}</div>}
-        {formik.errors.isNotUniq ? <div className="invalid-tooltip" style={{ display: 'block' }}>{t('signup.form.errors.invalidRequest')}</div> : null}
+        {formik.errors.isNotUniq && <div className="invalid-tooltip" style={{ display: 'block' }}>{t('signup.form.errors.invalidRequest')}</div>}
       </div>
       <Button type="submit" className="w-100 mb-3" variant="outline-primary" disabled={formik.isSubmitting}>
         Войти

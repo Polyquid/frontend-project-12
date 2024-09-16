@@ -3,7 +3,7 @@ import Button from 'react-bootstrap/esm/Button';
 import Modal from 'react-bootstrap/Modal';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
@@ -14,7 +14,6 @@ import getErrorTextI18n from '../../utils/getErrorTextI18n';
 import getLeoProfanityInstance from '../../utils/getLeoProfanityInstance';
 
 const AddChannelModal = ({ onHide, validationData }) => {
-  const [disabled, setDisabled] = useState(null);
   const innerRef = useRef(null);
   const dispatch = useDispatch();
   const [addChannel] = useAddChannelMutation();
@@ -30,7 +29,6 @@ const AddChannelModal = ({ onHide, validationData }) => {
     dispatch(setCurrentChannel({ name: channelName, id }));
   };
   const handleAddSubmit = async ({ name }) => {
-    setDisabled('true');
     const res = await addChannel({ name: filter.clean(name) });
     if (res.data) {
       const { data: { name: channelName, id } } = res;
@@ -40,7 +38,6 @@ const AddChannelModal = ({ onHide, validationData }) => {
       const textPathI18n = getErrorTextI18n(res);
       toast.error(t(textPathI18n));
     }
-    setDisabled(null);
     onHide();
   };
   const formik = useFormik({
@@ -49,6 +46,7 @@ const AddChannelModal = ({ onHide, validationData }) => {
     },
     validationSchema: Yup.object({
       name: Yup.string()
+        .trim()
         .min(3, errorsTexts.length)
         .max(20, errorsTexts.length)
         .notOneOf(validationData, errorsTexts.uniq)
@@ -88,8 +86,8 @@ const AddChannelModal = ({ onHide, validationData }) => {
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={onHide} variant="secondary" disabled={disabled}>{t('chat.modals.add.form.cancel')}</Button>
-          <Button type="submit" disabled={disabled}>{t('chat.modals.add.form.submit')}</Button>
+          <Button onClick={onHide} variant="secondary" disabled={formik.isSubmitting}>{t('chat.modals.add.form.cancel')}</Button>
+          <Button type="submit" disabled={formik.isSubmitting}>{t('chat.modals.add.form.submit')}</Button>
         </Modal.Footer>
       </form>
     </>

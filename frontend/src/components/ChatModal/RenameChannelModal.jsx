@@ -3,7 +3,7 @@ import Button from 'react-bootstrap/esm/Button';
 import Modal from 'react-bootstrap/Modal';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
@@ -12,7 +12,6 @@ import { useEditChannelMutation } from '../../services/channelsApi';
 import getErrorTextI18n from '../../utils/getErrorTextI18n';
 
 const RenameChannelModal = ({ onHide, validationData }) => {
-  const [disabled, setDisabled] = useState(null);
   const innerRef = useRef(null);
   const [editChannel] = useEditChannelMutation();
   const { id, name: clickedChannelName } = useSelector((state) => state.ui.clickedChannel);
@@ -24,7 +23,6 @@ const RenameChannelModal = ({ onHide, validationData }) => {
     uniq: t('chat.modals.rename.form.errors.uniq'),
   };
   const handleRenameSubmit = async ({ name: newName }) => {
-    setDisabled('true');
     const res = await editChannel({ id, name: newName });
     if (res.data) {
       toast.success(t('chat.notifications.rename'));
@@ -32,7 +30,6 @@ const RenameChannelModal = ({ onHide, validationData }) => {
       const textPathI18n = getErrorTextI18n(res);
       toast.error(t(textPathI18n));
     }
-    setDisabled(null);
     onHide();
   };
   const formik = useFormik({
@@ -41,6 +38,7 @@ const RenameChannelModal = ({ onHide, validationData }) => {
     },
     validationSchema: Yup.object({
       name: Yup.string()
+        .trim()
         .min(3, errorsTexts.length)
         .max(20, errorsTexts.length)
         .notOneOf(validationData, errorsTexts.uniq)
@@ -80,8 +78,8 @@ const RenameChannelModal = ({ onHide, validationData }) => {
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={onHide} variant="secondary" disabled={disabled}>{t('chat.modals.rename.form.cancel')}</Button>
-          <Button type="submit" disabled={disabled}>{t('chat.modals.rename.form.submit')}</Button>
+          <Button onClick={onHide} variant="secondary" disabled={formik.isSubmitting}>{t('chat.modals.rename.form.cancel')}</Button>
+          <Button type="submit" disabled={formik.isSubmitting}>{t('chat.modals.rename.form.submit')}</Button>
         </Modal.Footer>
       </form>
     </>

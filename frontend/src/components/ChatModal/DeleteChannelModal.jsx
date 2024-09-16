@@ -14,7 +14,7 @@ const DeleteChannelModal = ({ onHide }) => {
   const { t } = useTranslation();
 
   const handleDeleteSubmit = async () => {
-    setDisabled('true');
+    setDisabled('on');
     const res = await deleteChannel(id);
     if (res.data) {
       toast.success(t('chat.notifications.remove'));
