@@ -5,12 +5,12 @@ import {
   Field,
   ErrorMessage,
 } from 'formik';
+import * as Yup from 'yup';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 import { useDispatch } from 'react-redux';
-import getLoginSchema from '../utils/validation/getLoginSchema';
 import setAuthDataInLocalStorage from '../utils/setAuthDataInLocalStorage';
 import { usePostAuthDataMutation } from '../services/authApi';
 import getErrorTextI18n from '../utils/getErrorTextI18n';
@@ -24,10 +24,7 @@ const LoginForm = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
 
-  const errorsTexts = {
-    required: t('login.form.errors.required'),
-  };
-  const signUpSchema = getLoginSchema(errorsTexts);
+  const requiredTextError = t('login.form.errors.required');
   const handleSubmit = async (values) => {
     setDisabled(true);
     const res = await postAuthData(values);
@@ -56,7 +53,14 @@ const LoginForm = () => {
         username: '',
         password: '',
       }}
-      validationSchema={signUpSchema}
+      validationSchema={
+        Yup.object({
+          username: Yup.string()
+            .required(requiredTextError),
+          password: Yup.string()
+            .required(requiredTextError),
+        })
+      }
       onSubmit={handleSubmit}
     >
       {({ errors, touched }) => (

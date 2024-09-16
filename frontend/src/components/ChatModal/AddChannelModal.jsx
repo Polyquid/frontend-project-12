@@ -7,6 +7,7 @@ import {
   Field,
   ErrorMessage,
 } from 'formik';
+import * as Yup from 'yup';
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
@@ -16,13 +17,18 @@ import { setCurrentChannel } from '../../services/uiSlice';
 import getErrorTextI18n from '../../utils/getErrorTextI18n';
 import getLeoProfanityInstance from '../../utils/getLeoProfanityInstance';
 
-const AddChannelModal = ({ onHide, schemas: { addChannelSchema } }) => {
+const AddChannelModal = ({ onHide, validationData }) => {
   const [disabled, setDisabled] = useState(null);
   const innerRef = useRef(null);
   const dispatch = useDispatch();
   const [addChannel] = useAddChannelMutation();
   const { t } = useTranslation();
 
+  const errorsTexts = {
+    required: t('chat.modals.add.form.errors.required'),
+    length: t('chat.modals.add.form.errors.length'),
+    uniq: t('chat.modals.add.form.errors.uniq'),
+  };
   const filter = getLeoProfanityInstance();
   const changeToNewChannel = (channelName, id) => {
     dispatch(setCurrentChannel({ name: channelName, id }));
@@ -43,9 +49,7 @@ const AddChannelModal = ({ onHide, schemas: { addChannelSchema } }) => {
   };
 
   useEffect(() => {
-    if (innerRef.current) {
-      innerRef.current.focus();
-    }
+    innerRef?.current?.focus();
   }, []);
 
   return (
@@ -59,7 +63,15 @@ const AddChannelModal = ({ onHide, schemas: { addChannelSchema } }) => {
         initialValues={{
           name: '',
         }}
-        validationSchema={addChannelSchema}
+        validationSchema={
+          Yup.object({
+            name: Yup.string()
+              .min(3, errorsTexts.length)
+              .max(20, errorsTexts.length)
+              .notOneOf(validationData, errorsTexts.uniq)
+              .required(errorsTexts.required),
+          })
+        }
         onSubmit={handleAddSubmit}
       >
         {({ errors, touched }) => (
@@ -78,6 +90,7 @@ const AddChannelModal = ({ onHide, schemas: { addChannelSchema } }) => {
                     touched.name && errors.name ? 'is-invalid' : ''
                   }`}
                 />
+                {console.log(errors, touched)}
                 <label htmlFor="name">{t('chat.modals.add.form.name')}</label>
                 <ErrorMessage
                   component="div"

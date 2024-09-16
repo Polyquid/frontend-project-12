@@ -7,6 +7,7 @@ import {
   Field,
   ErrorMessage,
 } from 'formik';
+import * as Yup from 'yup';
 import { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
@@ -14,13 +15,18 @@ import { toast } from 'react-toastify';
 import { useEditChannelMutation } from '../../services/channelsApi';
 import getErrorTextI18n from '../../utils/getErrorTextI18n';
 
-const RenameChannelModal = ({ onHide, schemas: { renameChannelSchema } }) => {
+const RenameChannelModal = ({ onHide, validationData }) => {
   const [disabled, setDisabled] = useState(null);
   const innerRef = useRef(null);
   const [editChannel] = useEditChannelMutation();
   const { id, name: clickedChannelName } = useSelector((state) => state.ui.clickedChannel);
   const { t } = useTranslation();
 
+  const errorsTexts = {
+    required: t('chat.modals.rename.form.errors.required'),
+    length: t('chat.modals.rename.form.errors.required'),
+    uniq: t('chat.modals.rename.form.errors.required'),
+  };
   const handleRenameSubmit = async ({ name: newName }) => {
     setDisabled('true');
     const res = await editChannel({ id, name: newName });
@@ -51,7 +57,15 @@ const RenameChannelModal = ({ onHide, schemas: { renameChannelSchema } }) => {
         initialValues={{
           name: clickedChannelName,
         }}
-        validationSchema={renameChannelSchema}
+        validationSchema={
+          Yup.object({
+            name: Yup.string()
+              .min(3, errorsTexts.length)
+              .max(20, errorsTexts.length)
+              .notOneOf(validationData, errorsTexts.uniq)
+              .required(errorsTexts.required),
+          })
+        }
         onSubmit={handleRenameSubmit}
       >
         {({ errors, touched }) => (

@@ -4,9 +4,9 @@ import {
 import ErrorPage from './pages/ErrorPage.jsx';
 import LoginPage from './pages/LoginPage.jsx';
 import SignupPage from './pages/SignupPage.jsx';
-import PrivateRoute from './pages/PrivateRoute.jsx';
-import Layout from './pages/Layout.jsx';
-import Chat from './components/Chat.jsx';
+import Chat from './pages/Chat.jsx';
+import PrivateRoute from './components/PrivateRoute.jsx';
+import Layout from './components/Layout.jsx';
 
 const router = createBrowserRouter([
   {
