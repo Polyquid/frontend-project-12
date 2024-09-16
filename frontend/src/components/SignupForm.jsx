@@ -5,12 +5,12 @@ import {
   Field,
   ErrorMessage,
 } from 'formik';
+import * as Yup from 'yup';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
-import getSignupSchema from '../utils/validation/getSignupSchema';
 import setAuthDataInLocalStorage from '../utils/setAuthDataInLocalStorage';
 import { usePostSignupDataMutation } from '../services/signupApi';
 import { setAuthData } from '../services/authDataSlice';
@@ -32,7 +32,6 @@ const SignupForm = () => {
       password: t('signup.form.errors.passwordLength'),
     },
   };
-  const signUpSchema = getSignupSchema(errorsTexts);
   const handleSubmit = async ({ confirmPassword, ...values }) => {
     setDisabled('on');
     const res = await postSignupData(values);
@@ -61,7 +60,20 @@ const SignupForm = () => {
         password: '',
         confirmPassword: '',
       }}
-      validationSchema={signUpSchema}
+      validationSchema={
+        Yup.object({
+          username: Yup.string()
+            .min(3, errorsTexts.username)
+            .max(20, errorsTexts.username)
+            .required(errorsTexts.required),
+          password: Yup.string()
+            .min(6, errorsTexts.password)
+            .required(errorsTexts.required),
+          confirmPassword: Yup.string()
+            .oneOf([Yup.ref('password'), null], errorsTexts.confirm)
+            .required(errorsTexts.required),
+        })
+    }
       onSubmit={handleSubmit}
     >
       {({ errors, touched }) => (
