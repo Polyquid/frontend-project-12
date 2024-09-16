@@ -50,13 +50,16 @@ const SignupForm = () => {
     },
     validationSchema: Yup.object({
       username: Yup.string()
+        .trim()
         .min(3, errorsTexts.length.username)
         .max(20, errorsTexts.length.username)
         .required(errorsTexts.required),
       password: Yup.string()
+        .trim()
         .min(6, errorsTexts.length.password)
         .required(errorsTexts.required),
       confirmPassword: Yup.string()
+        .trim()
         .min(6, errorsTexts.length.password)
         .oneOf([Yup.ref('password'), null], errorsTexts.confirm)
         .required(errorsTexts.required),
