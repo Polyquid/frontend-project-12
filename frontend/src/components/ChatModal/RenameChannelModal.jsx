@@ -48,7 +48,7 @@ const RenameChannelModal = ({ onHide, validationData }) => {
   });
 
   useEffect(() => {
-    innerRef?.current?.focus();
+    innerRef?.current?.select();
   }, []);
 
   return (

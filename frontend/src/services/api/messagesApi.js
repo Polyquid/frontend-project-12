@@ -1,7 +1,6 @@
 /* eslint-disable import/no-cycle */
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { getMessagesPath } from '../../constants/apiRouter';
-import socket from '../../utils/getSocket';
 
 const baseQuery = fetchBaseQuery({
   baseUrl: getMessagesPath(),
@@ -22,25 +21,6 @@ export const messagesApi = createApi({
   endpoints: (builder) => ({
     getMessages: builder.query({
       query: () => '',
-      async onCacheEntryAdded(
-        arg,
-        { updateCachedData, cacheDataLoaded, cacheEntryRemoved },
-      ) {
-        socket.connect();
-        try {
-          await cacheDataLoaded;
-          const listener = (data) => {
-            updateCachedData((draft) => {
-              draft.push(data);
-            });
-          };
-          socket.on('newMessage', listener);
-        } catch {
-          throw new Error();
-        }
-        await cacheEntryRemoved;
-        socket.disconnect();
-      },
     }),
     addMessage: builder.mutation({
       query: (message) => ({

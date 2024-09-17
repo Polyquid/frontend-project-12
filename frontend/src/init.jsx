@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import i18next from 'i18next';
 import { initReactI18next } from 'react-i18next';
+import { io } from 'socket.io-client';
 import resources from './locales/index.js';
 import App from './App.jsx';
 import store from './services/index.js';
@@ -24,6 +25,9 @@ const init = async () => {
     accessToken: process.env.ROLLBAR_PRODUCTION_TOKEN,
     environment: process.env.NODE_ENV,
   };
+
+  const socket = io();
+
   const root = ReactDOM.createRoot(document.getElementById('root'));
   root.render(
     <React.StrictMode>
@@ -32,6 +36,7 @@ const init = async () => {
         i18nextInstance={i18nextInstance}
         store={store}
         router={router}
+        socket={socket}
       />
     </React.StrictMode>,
   );

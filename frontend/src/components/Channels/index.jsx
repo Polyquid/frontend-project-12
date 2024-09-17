@@ -1,4 +1,7 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable functional/no-let */
 import { useDispatch, useSelector } from 'react-redux';
+import { useContext, useEffect } from 'react';
 import {
   setClickedChannel,
   setCurrentChannel,
@@ -7,7 +10,8 @@ import {
 import ChannelsHeader from './ChannelsHeader';
 import ChannelsBody from './ChannelsBody';
 import ChatModal from '../ChatModal';
-import { useGetChannelsQuery } from '../../services/api/channelsApi';
+import { channelsApi, useGetChannelsQuery } from '../../services/api/channelsApi';
+import SocketContext from '../../contexts';
 
 const Channels = () => {
   const { data } = useGetChannelsQuery();
@@ -16,6 +20,8 @@ const Channels = () => {
     ui,
   }) => ui.currentChannel.name ?? ui.defaultChannel.name);
   const { name: modalName, show: modalShow } = useSelector((state) => state.ui.currentModal);
+  const { currentChannel, clickedChannel, defaultChannel } = useSelector((state) => state.ui);
+  const socket = useContext(SocketContext);
 
   const channelsNames = data?.map(({ name }) => name);
   const handleModalHide = () => {
@@ -39,6 +45,43 @@ const Channels = () => {
     const name = e.currentTarget.getAttribute('name');
     dispatch(setClickedChannel({ name, id }));
   };
+
+  useEffect(() => {
+    const listenerNewChannelEvent = (newData) => {
+      dispatch(
+        channelsApi.util.updateQueryData('getChannels', undefined, (draft) => {
+          draft.push(newData);
+        }),
+      );
+    };
+    const listenerRemoveChannelEvent = ({ id: removedId }) => {
+      dispatch(
+        channelsApi.util.updateQueryData('getChannels', undefined, (draft) => draft.filter(({ id }) => id !== removedId)),
+      );
+      if (currentChannel.id === clickedChannel.id) {
+        dispatch(setCurrentChannel(defaultChannel));
+      }
+    };
+    const listenerRenameChannelEvent = (changedData) => {
+      dispatch(
+        channelsApi.util.updateQueryData('getChannels', undefined, (draft) => draft.map((channel) => {
+          if (channel.id === changedData.id) {
+            return changedData;
+          }
+          return channel;
+        })),
+      );
+      dispatch(setCurrentChannel(changedData));
+    };
+    socket.on('newChannel', listenerNewChannelEvent);
+    socket.on('removeChannel', listenerRemoveChannelEvent);
+    socket.on('renameChannel', listenerRenameChannelEvent);
+    return () => {
+      socket.off('newChannel', listenerNewChannelEvent);
+      socket.off('removeChannel', listenerRemoveChannelEvent);
+      socket.off('renameChannel', listenerRenameChannelEvent);
+    };
+  }, []);
 
   return (
     <div className="col-4 col-md-2 border-end px-0 bg-light flex-column h-100 d-flex">
