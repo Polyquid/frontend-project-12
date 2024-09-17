@@ -1,5 +1,4 @@
 /* eslint-disable no-unused-vars */
-/* eslint-disable functional/no-let */
 import { useDispatch, useSelector } from 'react-redux';
 import { useContext, useEffect } from 'react';
 import {
