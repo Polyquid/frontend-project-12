@@ -4,12 +4,12 @@ import { Provider } from 'react-redux';
 import { ToastContainer } from 'react-toastify';
 import { RouterProvider } from 'react-router-dom';
 import SocketContext from './contexts';
+import store from './store/index.js';
+import router from './router';
 
 const App = ({
   rollbarConfig,
   i18nextInstance,
-  store,
-  router,
   socket,
 }) => (
   <RollbarProvider config={rollbarConfig}>

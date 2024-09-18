@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import Button from 'react-bootstrap/Button';
-import { useAddMessageMutation } from '../../services/api/messagesApi';
+import { useAddMessageMutation } from '../../store/api/messagesApi';
 import getLeoProfanityInstance from '../../utils/getLeoProfanityInstance';
 
 const MessagesForm = ({ currentChannelId, username }) => {

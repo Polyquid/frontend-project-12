@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import resetAuthDataInLocalStorage from '../utils/resetAuthDataInLocalStorage';
-import { resetAuthData } from '../services/slices/authDataSlice';
+import { resetAuthData } from '../store/slices/authDataSlice';
 
 const Header = () => {
   const navigate = useNavigate();

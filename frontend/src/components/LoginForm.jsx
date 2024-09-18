@@ -8,9 +8,9 @@ import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 import classNames from 'classnames';
 import setAuthDataInLocalStorage from '../utils/setAuthDataInLocalStorage';
-import { usePostAuthDataMutation } from '../services/api/authApi';
+import { usePostAuthDataMutation } from '../store/api/authApi';
 import getErrorTextI18n from '../utils/getErrorTextI18n';
-import { setAuthData } from '../services/slices/authDataSlice';
+import { setAuthData } from '../store/slices/authDataSlice';
 
 const LoginForm = () => {
   const [postAuthData] = usePostAuthDataMutation();

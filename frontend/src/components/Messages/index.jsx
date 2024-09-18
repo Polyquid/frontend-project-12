@@ -3,7 +3,7 @@ import { useContext, useEffect } from 'react';
 import MessagesBody from './MessagesBody';
 import MessagesForm from './MessagesForm';
 import MessagesHeader from './MessagesHeader';
-import { messagesApi, useGetMessagesQuery } from '../../services/api/messagesApi';
+import { messagesApi, useGetMessagesQuery } from '../../store/api/messagesApi';
 import SocketContext from '../../contexts';
 
 const Messages = () => {

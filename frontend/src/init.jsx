@@ -5,8 +5,6 @@ import { initReactI18next } from 'react-i18next';
 import { io } from 'socket.io-client';
 import resources from './locales/index.js';
 import App from './App.jsx';
-import store from './services/index.js';
-import router from './router';
 
 const init = async () => {
   const i18nextInstance = i18next.createInstance();
@@ -34,8 +32,6 @@ const init = async () => {
       <App
         rollbarConfig={rollbarConfig}
         i18nextInstance={i18nextInstance}
-        store={store}
-        router={router}
         socket={socket}
       />
     </React.StrictMode>,

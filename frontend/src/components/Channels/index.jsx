@@ -5,11 +5,11 @@ import {
   setClickedChannel,
   setCurrentChannel,
   setCurrentModal,
-} from '../../services/slices/uiSlice';
+} from '../../store/slices/uiSlice';
 import ChannelsHeader from './ChannelsHeader';
 import ChannelsBody from './ChannelsBody';
 import ChatModal from '../ChatModal';
-import { channelsApi, useGetChannelsQuery } from '../../services/api/channelsApi';
+import { channelsApi, useGetChannelsQuery } from '../../store/api/channelsApi';
 import SocketContext from '../../contexts';
 
 const Channels = () => {
